@@ -17,7 +17,6 @@ import sqlite3
 @dp.message_handler(state=None)
 async def bot_echo(message: types.Message):
     await message.answer(f"{message.text}")
-    print(message.text)
 
 async def parse_news(dp):
     
@@ -34,10 +33,10 @@ async def parse_news(dp):
         with open("last_news.json", "w") as f:
             f.write(json.dumps(dict_last_news))
 
-        await process_start_command(dict_last_news)
+        await send_post(dict_last_news)
 
 
-async def process_start_command(news):
+async def send_post(news):
     title = news["title"]
     link = news["url"]
     intro = news["intro"]
@@ -50,7 +49,7 @@ async def process_start_command(news):
 
 async def scheduler(dp):
     try:
-        aioschedule.every(2).seconds.do(parse_news, dp)
+        aioschedule.every(60).seconds.do(parse_news, dp)
         while True:
             await aioschedule.run_pending()
             await asyncio.sleep(1)
@@ -59,6 +58,12 @@ async def scheduler(dp):
 
 
 async def get_profile():
+    if not os.path.exists("data.db"):
+        conn = sqlite3.connect('data.db')
+        cur = conn.cursor()
+        cur.execute('CREATE TABLE users(user_id INTEGER, username TEXT)')
+        conn.close()
+
     conn = sqlite3.connect('data.db')
     conn.row_factory = lambda cursor, row: row[0]
     cur = conn.cursor()

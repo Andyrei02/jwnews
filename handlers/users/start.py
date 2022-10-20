@@ -9,7 +9,7 @@ import os
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    await message.reply(f"Привет, {message.from_user.full_name}!")
+    await message.answer(f"\tSalut, {message.from_user.full_name}! 👋 \nAcest bot este conceput pentru a vă anunța despre știrile zilnice de pe site-ul web al Martorilor lui Iehova ( jw .org ), \nBotul este în curs de dezvoltare și mă voi bucura dacă raportați funcționarea sa incorectă.😊 \n@andyrei")
 
     if not os.path.exists("data.db"):
         conn = sqlite3.connect('data.db')
@@ -18,7 +18,8 @@ async def bot_start(message: types.Message):
         conn.close()
 
     list_users = await get_list_users()
-    if not message.from_user.username in list_users:
+
+    if not message.from_user.id in list_users:
 
         try:
             conn = sqlite3.connect('data.db')
@@ -27,7 +28,6 @@ async def bot_start(message: types.Message):
             conn.commit()
             conn.close()
         except Exception as e:
-            print(e)
             conn = sqlite3.connect('data.db')
             cur = conn.cursor()
             cur.execute(f'INSERT INTO users VALUES("{message.from_user.id}")')
