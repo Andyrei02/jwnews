@@ -9,7 +9,8 @@ import os
 
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
-    await message.answer(f"\tSalut, {message.from_user.full_name}! 👋 \nAcest bot este conceput pentru a vă anunța despre știrile zilnice de pe site-ul web al Martorilor lui Iehova ( jw .org ), \nBotul este în curs de dezvoltare și mă voi bucura dacă raportați funcționarea sa incorectă.😊 \n@andyrei")
+    welcome = f"<b>Salut, {message.from_user.full_name}!</b> 👋 \nAcest bot este conceput pentru a vă anunța despre știrile zilnice de pe site-ul web al Martorilor lui Iehova <a href='https://www.jw.org/'>( jw .org )</a>, \nBotul este în curs de dezvoltare și mă voi bucura dacă raportați funcționarea sa incorectă.😊 \n@andyrei"
+    await message.answer(welcome, parse_mode="HTML")
 
     if not os.path.exists("data.db"):
         conn = sqlite3.connect('data.db')
